@@ -1,0 +1,86 @@
+{
+  "session_id": "session-2025-12-29-1",
+  "date": "2025-12-29",
+  "start_time": "2025-12-29T13:00:00Z",
+  "end_time": "2025-12-29T14:00:00Z",
+  "topics_practiced": [
+    {
+      "topic_id": "topic-001",
+      "questions_asked": 5,
+      "correct_answers": 4,
+      "questions": [
+        {
+          "question": "Ich _______ die Übung. (I am working on the exercise)",
+          "user_answer": "arbeite auf der",
+          "correct": false,
+          "notes": "Used 'arbeiten auf' instead of 'bearbeiten'. Common confusion - 'bearbeiten' is one word meaning 'to work on/process'"
+        },
+        {
+          "question": "Was ist die _______? (What is the research question?)",
+          "user_answer": "Forschungsfrage",
+          "correct": true,
+          "notes": "Perfect!"
+        },
+        {
+          "question": "Wir müssen die Begriffe _______. (We must distinguish the concepts)",
+          "user_answer": "dir",
+          "correct": false,
+          "notes": "Wrote 'dir' (to you) instead of 'die' (the). Small typo, understands the verb 'unterscheiden'"
+        },
+        {
+          "question": "research =",
+          "user_answer": "die Forschung",
+          "correct": true,
+          "notes": "Correct"
+        },
+        {
+          "question": "to understand =",
+          "user_answer": "verstehen",
+          "correct": true,
+          "notes": "Correct"
+        }
+      ]
+    },
+    {
+      "topic_id": "topic-002",
+      "questions_asked": 3,
+      "correct_answers": 3,
+      "questions": [
+        {
+          "question": "German parliament passes new renewable energy law",
+          "user_answer": "Policy",
+          "correct": true,
+          "notes": "Correctly identified as Policy (content/what)"
+        },
+        {
+          "question": "Two parties negotiate coalition after election",
+          "user_answer": "Politics",
+          "correct": true,
+          "notes": "Correctly identified as Politics (process/how)"
+        },
+        {
+          "question": "Germany has federal system with 16 Bundesländer",
+          "user_answer": "Polity",
+          "correct": true,
+          "notes": "Correctly identified as Polity (structure/framework)"
+        }
+      ]
+    },
+    {
+      "topic_id": "topic-004",
+      "questions_asked": 1,
+      "correct_answers": 1,
+      "questions": [
+        {
+          "question": "Classify Book 1 (Blum & Schubert) and Book 2 (Schubert & Bandelow Hrsg.)",
+          "user_answer": "Book 1 = Monographie, Book 2 = Sammelband",
+          "correct": true,
+          "notes": "Correctly identified based on 'Hrsg.' marker. Good understanding!"
+        }
+      ]
+    }
+  ],
+  "overall_score": 0.89,
+  "session_notes": "Excellent first session! Strong grasp of Policy/Polity/Politics concepts (100%). Good vocabulary retention (80%). Monograph/Sammelband distinction mastered (100%). Main areas for improvement: German grammar (articles 'die' vs 'dir', compound verbs 'bearbeiten').",
+  "chat_context_summary": "First learning session combining German language learning with Übung A preparation. Student wants to improve German through sociology materials. Focus on vocabulary, concepts, and Übung completion. Interactive quiz-based learning approach."
+}

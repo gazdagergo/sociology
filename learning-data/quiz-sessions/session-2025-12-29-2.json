@@ -1,0 +1,90 @@
+{
+  "session_id": "session-2025-12-29-2",
+  "date": "2025-12-29",
+  "start_time": "2025-12-29T14:15:00Z",
+  "end_time": "2025-12-29T14:30:00Z",
+  "topics_practiced": [
+    {
+      "topic_id": "topic-003",
+      "questions_asked": 12,
+      "correct_answers": 8,
+      "questions": [
+        {
+          "question": "der Katalog = ?",
+          "user_answer": "the Catalogue",
+          "correct": true,
+          "notes": "Perfect!"
+        },
+        {
+          "question": "der Herausgeber (Hrsg.) = ?",
+          "user_answer": "editor (?)",
+          "correct": true,
+          "notes": "Correct! User was uncertain but got it right"
+        },
+        {
+          "question": "überarbeitet = ?",
+          "user_answer": "reworkded",
+          "correct": false,
+          "notes": "Close! Meant 'reworked' but correct answer is 'revised'. Spelling error + slightly wrong translation"
+        },
+        {
+          "question": "edition = ? (German)",
+          "user_answer": "die Auflage",
+          "correct": true,
+          "notes": "Perfect!"
+        },
+        {
+          "question": "to publish = ? (German)",
+          "user_answer": "verlegen (?)",
+          "correct": false,
+          "notes": "Incorrect. 'verlegen' can mean 'to publish' as publisher's action, but standard term is 'erscheinen' (to be published/appear)"
+        },
+        {
+          "question": "monograph = ? (German)",
+          "user_answer": "der Monograf",
+          "correct": false,
+          "notes": "Close but wrong gender and ending. Correct: 'die Monographie' (feminine, -ie ending)"
+        },
+        {
+          "question": "Fill blank: Ich __ das Wort im Wörterbuch __. (nachschlagen)",
+          "user_answer": "Ich suche das Wort im Wörterbuch nach",
+          "correct": false,
+          "notes": "Used 'suchen nach' instead of 'nachschlagen'. Correct: 'Ich schlage das Wort im Wörterbuch nach.'"
+        },
+        {
+          "question": "Fill blank: Das Buch __ von Springer Verlag __. (erscheinen, past)",
+          "user_answer": "Das Buch ist von Springer Verlag verliegen",
+          "correct": false,
+          "notes": "'verliegen' is not a word. Correct: 'ist erschienen' (past participle of erscheinen)"
+        },
+        {
+          "question": "Bonus: Who is Anna Müller (Hrsg.)?",
+          "user_answer": "editor",
+          "correct": true,
+          "notes": "Correct!"
+        },
+        {
+          "question": "Bonus: Publication year?",
+          "user_answer": "2020",
+          "correct": true,
+          "notes": "Correct!"
+        },
+        {
+          "question": "Bonus: Which edition?",
+          "user_answer": "zweite Auflage",
+          "correct": true,
+          "notes": "Correct! 2nd revised edition"
+        },
+        {
+          "question": "Bonus: Publisher?",
+          "user_answer": "Campus Verlag",
+          "correct": true,
+          "notes": "Correct!"
+        }
+      ]
+    }
+  ],
+  "overall_score": 0.67,
+  "session_notes": "Good progress on library vocabulary (66.67%). Strong on: reading bibliographic information, basic translations (Katalog, Herausgeber, Auflage). Needs practice: German verbs (erscheinen, nachschlagen), noun gender/endings (die Monographie not der Monograf), precise translations (revised vs. reworked).",
+  "chat_context_summary": "Second quiz session. Practicing library search vocabulary (topic-003) that was introduced earlier. User showed good comprehension of bibliographic information reading but struggled with verb conjugations and precise German grammar."
+}
