@@ -5,10 +5,18 @@
   "source_material": "exercises/UBUNG_A.md",
   "source_reference": "Übung A Task 1-2 - Literature search and classification",
   "created_date": "2025-12-29",
-  "attempts": [],
-  "last_practiced": null,
-  "next_review": "2025-12-29",
+  "attempts": [
+    {
+      "session_id": "session-2025-12-29-2",
+      "date": "2025-12-29",
+      "score": 8,
+      "total": 12,
+      "status": "improving"
+    }
+  ],
+  "last_practiced": "2025-12-29",
+  "next_review": "2025-12-30",
   "srs_interval_days": 1,
-  "mastery_level": "new",
+  "mastery_level": "learning",
   "tags": ["vocabulary", "german", "library", "research", "ubung-a"]
 }

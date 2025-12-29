@@ -1,15 +1,15 @@
 {
-  "last_updated": "2025-12-29T14:00:00Z",
+  "last_updated": "2025-12-29T14:30:00Z",
   "total_topics": 4,
   "topics_by_mastery": {
-    "new": 1,
-    "learning": 2,
+    "new": 0,
+    "learning": 3,
     "reviewing": 1,
     "mastered": 0
   },
-  "total_sessions": 1,
-  "total_questions_answered": 9,
-  "overall_accuracy": 88.89,
+  "total_sessions": 2,
+  "total_questions_answered": 21,
+  "overall_accuracy": 76.19,
   "study_streak_days": 1,
   "last_study_date": "2025-12-29"
 }
