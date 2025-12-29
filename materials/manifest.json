@@ -1,0 +1,72 @@
+{
+  "version": "1.0",
+  "last_updated": "2025-12-29",
+  "description": "Manifest of learning materials stored in cloud (Google Drive). PDFs are not in git - only their metadata and links are tracked here.",
+  "materials": [
+    {
+      "id": "sozialwissenschaftliches-arbeiten",
+      "title": "Sozialwissenschaftliches Arbeiten",
+      "filename": "Sozialwissenschaftliches_Arbeiten.pdf",
+      "url": "https://drive.google.com/file/d/1L_pzKERP7a1lVr2QQhYidxVSQlRWhwKe/view?usp=sharing",
+      "raw_url": "https://drive.google.com/uc?export=download&id=1L_pzKERP7a1lVr2QQhYidxVSQlRWhwKe",
+      "type": "textbook",
+      "pages": 108,
+      "sections": [
+        {
+          "chapter": 1,
+          "title": "Einleitung",
+          "pages": "7-8"
+        },
+        {
+          "chapter": 2,
+          "title": "Sozialwissenschaften als Forschungsprozess",
+          "pages": "9-28",
+          "subsections": [
+            "Die Gegenstände: Gesellschaft, Politik und Verwaltungen",
+            "Die Theorien",
+            "Die Herangehensweise: Kritischer Rationalismus",
+            "Der Zusammenhang von Theorie und Methode",
+            "Die Methoden",
+            "Gütekriterien"
+          ]
+        },
+        {
+          "chapter": 3,
+          "title": "Sozialwissenschaften als Kommunikationsprozess",
+          "pages": "29-47",
+          "subsections": [
+            "Öffentliche wissenschaftliche Kommunikation",
+            "Fremdsprachige, insbesondere englische Texte",
+            "Direkte wissenschaftliche Kommunikation"
+          ]
+        },
+        {
+          "chapter": 4,
+          "title": "Sozialwissenschaften als Lehr- und Lernprozess",
+          "pages": "48-94",
+          "subsections": [
+            "Ganz praktisch: Die Anwendung im Studium",
+            "Die Literaturrecherche",
+            "Materialien und Quellen nutzen und auswerten",
+            "Studien- und Prüfungsleistungen",
+            "Das Schreiben einer Hausarbeit"
+          ]
+        },
+        {
+          "chapter": 5,
+          "title": "Ausblick: Die Hausarbeit im Modul B1",
+          "pages": "95-96"
+        },
+        {
+          "chapter": 6,
+          "title": "Literaturverzeichnis",
+          "pages": "97-108"
+        }
+      ],
+      "learning_unit": "LE_I",
+      "course": "Kurs 25501 B1: Einführung in den Studiengang",
+      "uploaded": "2025-12-29",
+      "notes": "Foundational methods textbook covering social scientific research methods, academic communication, and study skills. Essential guide for learning how to work scientifically in sociology, political science, and administrative science. Covers research process, reading/writing academic texts, literature research, and preparing assignments including the Bachelor thesis."
+    }
+  ]
+}

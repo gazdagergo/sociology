@@ -1,0 +1,37 @@
+# Git Ignore File for Sociology Learning Repository
+
+# PDFs - stored in cloud (Google Drive), not in git
+*.pdf
+**/*.pdf
+materials/**/*.pdf
+
+# Keep manifest that tracks cloud PDFs
+!materials/manifest.json
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Environment
+.env
+.venv
+venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
