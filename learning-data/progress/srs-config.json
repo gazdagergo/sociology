@@ -1,0 +1,14 @@
+{
+  "algorithm": "SM2-simplified",
+  "intervals": {
+    "initial": 1,
+    "success_multiplier": 2.5,
+    "failure_reset": 1,
+    "max_interval": 180
+  },
+  "mastery_thresholds": {
+    "learning_to_reviewing": 0.8,
+    "reviewing_to_mastered": 0.9,
+    "mastered_attempts_required": 3
+  }
+}
