@@ -1,0 +1,22 @@
+{
+  "topic_id": "topic-001",
+  "title": "Core German Academic Vocabulary Set 1",
+  "description": "Essential German words for academic work: Forschung (research), Begriffe (concepts), Literatur (literature), Frage (question), unterscheiden (distinguish), erklären (explain), Verfahren (method), Ziel (goal), bearbeiten (work on), verstehen (understand)",
+  "source_material": "Learning session 2025-12-29",
+  "source_reference": "Interactive vocabulary lesson",
+  "created_date": "2025-12-29",
+  "attempts": [
+    {
+      "session_id": "session-2025-12-29-1",
+      "date": "2025-12-29",
+      "score": 4,
+      "total": 5,
+      "status": "mastered"
+    }
+  ],
+  "last_practiced": "2025-12-29",
+  "next_review": "2026-01-03",
+  "srs_interval_days": 5,
+  "mastery_level": "learning",
+  "tags": ["vocabulary", "german", "academic", "fundamentals"]
+}
