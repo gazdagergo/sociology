@@ -1,15 +1,34 @@
 """
 Configuration management for PDF search system.
+
+Supports multiple configuration sources (in priority order):
+1. GitHub Secrets (via environment variables) - RECOMMENDED for web-based usage
+2. .env file (for local development)
+3. Default values
+
+For web-based Claude Code:
+- Set GitHub repository secrets
+- They're automatically available as environment variables
+
+For local development:
+- Create .env file from .env.example
+- Add your API keys there
 """
 
 import os
 from pathlib import Path
 from typing import Optional
-from dotenv import load_dotenv
 
-# Load environment variables from .env file
-env_path = Path(__file__).parent / '.env'
-load_dotenv(dotenv_path=env_path)
+# Try to load .env file if it exists (for local development)
+# GitHub Secrets will override these via environment variables
+try:
+    from dotenv import load_dotenv
+    env_path = Path(__file__).parent / '.env'
+    if env_path.exists():
+        load_dotenv(dotenv_path=env_path)
+except ImportError:
+    # python-dotenv not installed, rely on environment variables only
+    pass
 
 
 class Config:
@@ -67,17 +86,28 @@ class Config:
     @classmethod
     def print_config(cls):
         """Print current configuration (hide sensitive data)."""
+        # Detect configuration source
+        env_file = Path(__file__).parent / '.env'
+        config_source = "GitHub Secrets / Environment Variables"
+        if env_file.exists():
+            config_source = "Environment Variables (with .env fallback)"
+
         print("=== PDF Search Configuration ===")
+        print(f"Config Source: {config_source}")
+        print()
         print(f"Pinecone API Key: {'*' * 20}{cls.PINECONE_API_KEY[-4:] if cls.PINECONE_API_KEY else 'NOT SET'}")
         print(f"Pinecone Environment: {cls.PINECONE_ENVIRONMENT}")
         print(f"Index Name: {cls.PINECONE_INDEX_NAME}")
         print(f"Namespace: {cls.PINECONE_NAMESPACE}")
+        print()
         print(f"Embedding Model: {cls.EMBEDDING_MODEL}")
         print(f"Embedding Dimension: {cls.EMBEDDING_DIMENSION}")
+        print()
         print(f"Chunk Size: {cls.CHUNK_SIZE} chars")
         print(f"Chunk Overlap: {cls.CHUNK_OVERLAP} chars")
         print(f"Default Top-K: {cls.DEFAULT_TOP_K}")
         print(f"Similarity Threshold: {cls.SIMILARITY_THRESHOLD}")
+        print()
         print(f"Manifest Path: {cls.MANIFEST_PATH}")
         print("=" * 35)
 

@@ -31,6 +31,28 @@ pip install -r requirements.txt
 
 ### 2. Configuration
 
+**Two options depending on your environment:**
+
+#### Option A: GitHub Secrets (RECOMMENDED for web-based Claude Code)
+
+Perfect for using from browser or mobile device:
+
+1. Get your Pinecone API key from [pinecone.io](https://www.pinecone.io/)
+2. Add as GitHub repository secret:
+   - Go to: `https://github.com/YOUR_USERNAME/sociology/settings/secrets/actions`
+   - Click **"New repository secret"**
+   - Name: `PINECONE_API_KEY`
+   - Value: Your Pinecone API key
+   - Click **"Add secret"**
+
+3. **Done!** The system automatically reads from GitHub Secrets.
+
+**See [GITHUB-SECRETS-SETUP.md](GITHUB-SECRETS-SETUP.md) for detailed instructions.**
+
+#### Option B: Local .env File (for local development)
+
+If running locally with file access:
+
 ```bash
 # Copy example environment file
 cp .env.example .env
@@ -45,6 +67,8 @@ PINECONE_API_KEY=your_api_key_here
 PINECONE_ENVIRONMENT=us-east-1  # or your region
 PINECONE_INDEX_NAME=sociology-pdfs
 ```
+
+**Note:** GitHub Secrets take precedence over `.env` files.
 
 ### 3. Create Index
 
