@@ -6,6 +6,7 @@ Handles index creation, upsert, search, and deletion.
 import time
 from typing import List, Dict, Any, Optional
 from pinecone import Pinecone, ServerlessSpec
+from sentence_transformers import SentenceTransformer
 from config import Config
 
 
@@ -16,7 +17,8 @@ class PineconeManager:
         self,
         api_key: Optional[str] = None,
         index_name: Optional[str] = None,
-        namespace: Optional[str] = None
+        namespace: Optional[str] = None,
+        embedding_model: Optional[str] = None
     ):
         """
         Initialize Pinecone manager.
@@ -25,10 +27,12 @@ class PineconeManager:
             api_key: Pinecone API key (defaults to Config.PINECONE_API_KEY)
             index_name: Index name (defaults to Config.PINECONE_INDEX_NAME)
             namespace: Namespace (defaults to Config.PINECONE_NAMESPACE)
+            embedding_model: Model name for embeddings (defaults to Config.EMBEDDING_MODEL)
         """
         self.api_key = api_key or Config.PINECONE_API_KEY
         self.index_name = index_name or Config.PINECONE_INDEX_NAME
         self.namespace = namespace or Config.PINECONE_NAMESPACE
+        self.embedding_model_name = embedding_model or Config.EMBEDDING_MODEL
 
         if not self.api_key:
             raise ValueError("Pinecone API key is required")
@@ -36,6 +40,11 @@ class PineconeManager:
         # Initialize Pinecone client
         self.pc = Pinecone(api_key=self.api_key)
         self.index = None
+
+        # Initialize embedding model
+        print(f"Loading embedding model: {self.embedding_model_name}...")
+        self.embedding_model = SentenceTransformer(self.embedding_model_name)
+        print("✓ Embedding model loaded")
 
     def create_index(
         self,
@@ -88,6 +97,24 @@ class PineconeManager:
 
         return self.index
 
+    def embed_texts(self, texts: List[str], show_progress: bool = False) -> List[List[float]]:
+        """
+        Generate embeddings for a list of texts.
+
+        Args:
+            texts: List of text strings to embed
+            show_progress: Show progress bar
+
+        Returns:
+            List of embedding vectors
+        """
+        embeddings = self.embedding_model.encode(
+            texts,
+            show_progress_bar=show_progress,
+            convert_to_numpy=True
+        )
+        return embeddings.tolist()
+
     def upsert_chunks(
         self,
         chunks: List[Dict[str, Any]],
@@ -120,14 +147,17 @@ class PineconeManager:
         """
         index = self.get_index()
 
+        # Generate embeddings for all chunks
+        print("Generating embeddings...")
+        texts = [chunk['text'] for chunk in chunks]
+        embeddings = self.embed_texts(texts, show_progress=show_progress)
+
         # Prepare vectors for upsert
-        # Note: With Pinecone's serverless embedding, we send text directly
-        # The embedding happens server-side
         vectors = []
-        for chunk in chunks:
+        for chunk, embedding in zip(chunks, embeddings):
             vectors.append({
                 'id': chunk['id'],
-                'values': chunk.get('values', []),  # Empty if using server-side embedding
+                'values': embedding,
                 'metadata': chunk['metadata']
             })
 
@@ -192,11 +222,12 @@ class PineconeManager:
         """
         index = self.get_index()
 
-        # Note: With serverless embedding, query text is sent directly
-        # Pinecone handles embedding server-side
+        # Generate embedding for query
+        query_embedding = self.embed_texts([query])[0]
+
+        # Search
         results = index.query(
-            vector=query if isinstance(query, list) else None,  # If pre-embedded
-            data=query if isinstance(query, str) else None,  # If text query
+            vector=query_embedding,
             top_k=top_k,
             filter=filter_metadata,
             include_metadata=include_metadata,

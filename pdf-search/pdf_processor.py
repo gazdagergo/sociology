@@ -20,7 +20,7 @@ try:
 except ImportError:
     pdfplumber = None
 
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from config import Config
 
 
@@ -266,6 +266,23 @@ class PDFProcessor:
 
         return chunks
 
+    def download_from_url(self, url: str) -> bytes:
+        """
+        Download PDF from any direct URL (Firebase Storage, etc).
+
+        Args:
+            url: Direct URL to PDF file
+
+        Returns:
+            PDF content as bytes
+        """
+        try:
+            response = requests.get(url, timeout=60)
+            response.raise_for_status()
+            return response.content
+        except requests.RequestException as e:
+            raise Exception(f"Failed to download PDF from {url}: {e}")
+
     def process_pdf_from_manifest(
         self,
         material_id: str,
@@ -295,12 +312,7 @@ class PDFProcessor:
         if not material:
             raise ValueError(f"Material '{material_id}' not found in manifest")
 
-        # Extract file ID from raw_url
         raw_url = material.get('raw_url', '')
-        if 'id=' not in raw_url:
-            raise ValueError(f"Could not extract file ID from raw_url: {raw_url}")
-
-        file_id = raw_url.split('id=')[1].split('&')[0]
 
         # Prepare metadata
         metadata = {
@@ -317,12 +329,37 @@ class PDFProcessor:
         if 'sections' in material:
             metadata['sections'] = json.dumps(material['sections'])
 
-        # Process the PDF
-        return self.process_pdf_from_drive(
-            file_id=file_id,
-            document_id=material_id,
-            metadata=metadata
-        )
+        # Determine URL type and download accordingly
+        if 'firebasestorage.googleapis.com' in raw_url:
+            # Firebase Storage URL - download directly
+            print(f"Downloading PDF from Firebase Storage...")
+            pdf_content = self.download_from_url(raw_url)
+
+            print(f"Extracting text using pdfplumber...")
+            text = self.extract_text(pdf_content, method="pdfplumber")
+
+            if not text or len(text.strip()) < 100:
+                raise Exception("Failed to extract meaningful text from PDF")
+
+            print(f"Extracted {len(text)} characters")
+
+            print("Chunking text...")
+            chunks = self.chunk_text(text, material_id, metadata)
+
+            print(f"Created {len(chunks)} chunks")
+
+            return chunks
+
+        elif 'drive.google.com' in raw_url or 'id=' in raw_url:
+            # Google Drive URL - extract file ID
+            file_id = raw_url.split('id=')[1].split('&')[0]
+            return self.process_pdf_from_drive(
+                file_id=file_id,
+                document_id=material_id,
+                metadata=metadata
+            )
+        else:
+            raise ValueError(f"Unsupported URL type: {raw_url}")
 
 
 if __name__ == "__main__":
