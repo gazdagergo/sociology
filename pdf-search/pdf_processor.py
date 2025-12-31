@@ -5,6 +5,7 @@ Handles downloading from Google Drive and text extraction.
 
 import io
 import json
+import re
 import requests
 from pathlib import Path
 from typing import List, Dict, Any, Optional
@@ -88,6 +89,184 @@ class PDFProcessor:
         except requests.RequestException as e:
             raise Exception(f"Failed to download PDF: {e}")
 
+    def _get_page_labels_from_pdf(self, pdf_content: bytes) -> Dict[int, str]:
+        """
+        Extract page labels from PDF metadata.
+
+        Args:
+            pdf_content: PDF file content as bytes
+
+        Returns:
+            Dictionary mapping PDF page index (0-based) to page label string
+        """
+        try:
+            if PyPDF2 is None:
+                return {}
+
+            pdf_file = io.BytesIO(pdf_content)
+            reader = PyPDF2.PdfReader(pdf_file)
+
+            # Check if PageLabels exist in catalog
+            root = reader.trailer.get('/Root')
+            if not root:
+                return {}
+
+            # Dereference root if it's an indirect object
+            if hasattr(root, 'get_object'):
+                root = root.get_object()
+
+            if '/PageLabels' not in root:
+                return {}
+
+            page_labels_obj = root['/PageLabels']
+
+            # Dereference if indirect object
+            if hasattr(page_labels_obj, 'get_object'):
+                page_labels_obj = page_labels_obj.get_object()
+
+            nums = page_labels_obj.get('/Nums', [])
+
+            if not nums:
+                return {}
+
+            # Build page label map
+            labels = {}
+            total_pages = len(reader.pages)
+
+            for page_idx in range(total_pages):
+                label = self._calculate_page_label(page_idx, nums)
+                if label:
+                    labels[page_idx] = label
+
+            return labels
+
+        except Exception as e:
+            print(f"Warning: Could not extract page labels: {e}")
+            return {}
+
+    def _calculate_page_label(self, page_index: int, nums_array: list) -> Optional[str]:
+        """
+        Calculate the page label for a given page index from PageLabels /Nums array.
+
+        Args:
+            page_index: 0-based page index
+            nums_array: /Nums array from PDF PageLabels
+
+        Returns:
+            Page label string or None
+        """
+        # Find the applicable range
+        applicable_range = None
+        for i in range(0, len(nums_array), 2):
+            start_idx = nums_array[i]
+            if start_idx <= page_index:
+                applicable_range = (start_idx, nums_array[i + 1])
+            else:
+                break
+
+        if applicable_range is None:
+            return None
+
+        start_idx, label_dict_ref = applicable_range
+
+        # Dereference indirect object
+        try:
+            label_dict = label_dict_ref.get_object() if hasattr(label_dict_ref, 'get_object') else label_dict_ref
+        except:
+            return None
+
+        # Get label components
+        style = label_dict.get('/S', '/D')
+        prefix = label_dict.get('/P', '')
+        start_val = label_dict.get('/St', 1)
+
+        # Calculate the number for this page
+        page_num_in_range = page_index - start_idx
+        actual_number = start_val + page_num_in_range
+
+        # Format based on style
+        if style == '/D':  # Decimal
+            number_str = str(actual_number)
+        elif style == '/r':  # Lowercase roman
+            number_str = self._to_roman(actual_number).lower()
+        elif style == '/R':  # Uppercase roman
+            number_str = self._to_roman(actual_number)
+        elif style == '/a':  # Lowercase letters
+            number_str = self._to_letters(actual_number).lower()
+        elif style == '/A':  # Uppercase letters
+            number_str = self._to_letters(actual_number)
+        else:
+            number_str = str(actual_number)
+
+        return f"{prefix}{number_str}"
+
+    def _to_roman(self, num: int) -> str:
+        """Convert integer to Roman numerals."""
+        val = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1]
+        syms = ['M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I']
+        roman_num = ''
+        i = 0
+        while num > 0:
+            for _ in range(num // val[i]):
+                roman_num += syms[i]
+                num -= val[i]
+            i += 1
+        return roman_num
+
+    def _to_letters(self, num: int) -> str:
+        """Convert integer to letters (A, B, C, ...)."""
+        result = ''
+        while num > 0:
+            num -= 1
+            result = chr(65 + (num % 26)) + result
+            num //= 26
+        return result
+
+    def _extract_printed_page_number(self, page_text: str) -> Optional[int]:
+        """
+        Extract the printed page number from a page's header or footer.
+        (Fallback method when PDF metadata is not available)
+
+        Args:
+            page_text: Full text of the page
+
+        Returns:
+            Printed page number if found, None otherwise
+        """
+        if not page_text:
+            return None
+
+        lines = page_text.split('\n')
+
+        # Check first 3 lines (header) and last 3 lines (footer)
+        header_lines = lines[:3] if len(lines) > 3 else lines
+        footer_lines = lines[-3:] if len(lines) > 3 else lines
+
+        # Pattern 1: "10 Title" or just "10" at start of line (even pages)
+        for line in header_lines:
+            match = re.match(r'^(\d+)\s+\w', line)
+            if match:
+                return int(match.group(1))
+            # Also try standalone number
+            match = re.match(r'^(\d+)\s*$', line)
+            if match:
+                return int(match.group(1))
+
+        # Pattern 2: "Chapter Title PageNumber" (odd pages)
+        for line in header_lines:
+            # Look for "1 Einleitung 3" pattern (chapter# title page#)
+            match = re.search(r'^\d+\s+\w+\s+(\d+)$', line)
+            if match:
+                return int(match.group(1))
+
+        # Pattern 3: Standalone number in footer
+        for line in footer_lines:
+            match = re.search(r'^\s*(\d+)\s*$', line)
+            if match:
+                return int(match.group(1))
+
+        return None
+
     def extract_text_pypdf2(self, pdf_content: bytes) -> str:
         """
         Extract text using PyPDF2.
@@ -107,11 +286,25 @@ class PDFProcessor:
         try:
             reader = PyPDF2.PdfReader(pdf_file)
 
+            # First, try to get page labels from PDF metadata
+            page_labels = self._get_page_labels_from_pdf(pdf_content)
+
             for page_num, page in enumerate(reader.pages):
                 try:
                     page_text = page.extract_text()
                     if page_text:
-                        text.append(f"--- Page {page_num + 1} ---\n{page_text}")
+                        # Priority 1: Use page label from PDF metadata
+                        if page_num in page_labels:
+                            page_label = page_labels[page_num]
+                            text.append(f"--- Page {page_label} ---\n{page_text}")
+                        else:
+                            # Priority 2: Try to extract from header/footer
+                            printed_page = self._extract_printed_page_number(page_text)
+                            if printed_page:
+                                text.append(f"--- Page {printed_page} ---\n{page_text}")
+                            else:
+                                # Fallback: Use PDF page number
+                                text.append(f"--- Page {page_num + 1} ---\n{page_text}")
                 except Exception as e:
                     print(f"Warning: Could not extract page {page_num + 1}: {e}")
 
@@ -137,12 +330,26 @@ class PDFProcessor:
         pdf_file = io.BytesIO(pdf_content)
 
         try:
+            # First, try to get page labels from PDF metadata
+            page_labels = self._get_page_labels_from_pdf(pdf_content)
+
             with pdfplumber.open(pdf_file) as pdf:
                 for page_num, page in enumerate(pdf.pages):
                     try:
                         page_text = page.extract_text()
                         if page_text:
-                            text.append(f"--- Page {page_num + 1} ---\n{page_text}")
+                            # Priority 1: Use page label from PDF metadata
+                            if page_num in page_labels:
+                                page_label = page_labels[page_num]
+                                text.append(f"--- Page {page_label} ---\n{page_text}")
+                            else:
+                                # Priority 2: Try to extract from header/footer
+                                printed_page = self._extract_printed_page_number(page_text)
+                                if printed_page:
+                                    text.append(f"--- Page {printed_page} ---\n{page_text}")
+                                else:
+                                    # Fallback: Use PDF page number
+                                    text.append(f"--- Page {page_num + 1} ---\n{page_text}")
                     except Exception as e:
                         print(f"Warning: Could not extract page {page_num + 1}: {e}")
 
@@ -176,6 +383,44 @@ class PDFProcessor:
             return self.extract_text_pypdf2(pdf_content)
         else:
             raise ValueError(f"Unknown extraction method: {method}")
+
+    def _extract_page_numbers(self, text: str) -> Dict[str, Any]:
+        """
+        Extract page numbers from chunk text containing page markers.
+
+        Args:
+            text: Chunk text potentially containing "--- Page X ---" markers
+
+        Returns:
+            Dict with page_number (int), page_start (int), page_end (int), page_range (str)
+        """
+        # Find all page markers in the text
+        page_pattern = r'--- Page (\d+) ---'
+        matches = re.findall(page_pattern, text)
+
+        if not matches:
+            return {}
+
+        # Convert to integers
+        page_numbers = [int(p) for p in matches]
+        page_start = min(page_numbers)
+        page_end = max(page_numbers)
+
+        # Primary page number (first occurrence)
+        page_number = page_numbers[0]
+
+        # Page range string
+        if page_start == page_end:
+            page_range = str(page_start)
+        else:
+            page_range = f"{page_start}-{page_end}"
+
+        return {
+            'page_number': page_number,      # Primary page (first in chunk)
+            'page_start': page_start,         # Start page if spans multiple
+            'page_end': page_end,             # End page if spans multiple
+            'page_range': page_range          # Human-readable range
+        }
 
     def chunk_text(
         self,
@@ -216,6 +461,11 @@ class PDFProcessor:
                 'created_at': datetime.now().isoformat(),
                 'document_type': 'pdf'
             }
+
+            # Extract and add page number information
+            page_info = self._extract_page_numbers(chunk_text)
+            if page_info:
+                chunk_metadata.update(page_info)
 
             # Add custom metadata if provided
             if metadata:
