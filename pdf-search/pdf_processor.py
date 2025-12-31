@@ -293,18 +293,20 @@ class PDFProcessor:
                 try:
                     page_text = page.extract_text()
                     if page_text:
+                        pdf_page = page_num + 1  # 1-based PDF page number
+
                         # Priority 1: Use page label from PDF metadata
                         if page_num in page_labels:
                             page_label = page_labels[page_num]
-                            text.append(f"--- Page {page_label} ---\n{page_text}")
+                            text.append(f"--- Page {page_label} (PDF {pdf_page}) ---\n{page_text}")
                         else:
                             # Priority 2: Try to extract from header/footer
                             printed_page = self._extract_printed_page_number(page_text)
                             if printed_page:
-                                text.append(f"--- Page {printed_page} ---\n{page_text}")
+                                text.append(f"--- Page {printed_page} (PDF {pdf_page}) ---\n{page_text}")
                             else:
                                 # Fallback: Use PDF page number
-                                text.append(f"--- Page {page_num + 1} ---\n{page_text}")
+                                text.append(f"--- Page {pdf_page} (PDF {pdf_page}) ---\n{page_text}")
                 except Exception as e:
                     print(f"Warning: Could not extract page {page_num + 1}: {e}")
 
@@ -338,18 +340,20 @@ class PDFProcessor:
                     try:
                         page_text = page.extract_text()
                         if page_text:
+                            pdf_page = page_num + 1  # 1-based PDF page number
+
                             # Priority 1: Use page label from PDF metadata
                             if page_num in page_labels:
                                 page_label = page_labels[page_num]
-                                text.append(f"--- Page {page_label} ---\n{page_text}")
+                                text.append(f"--- Page {page_label} (PDF {pdf_page}) ---\n{page_text}")
                             else:
                                 # Priority 2: Try to extract from header/footer
                                 printed_page = self._extract_printed_page_number(page_text)
                                 if printed_page:
-                                    text.append(f"--- Page {printed_page} ---\n{page_text}")
+                                    text.append(f"--- Page {printed_page} (PDF {pdf_page}) ---\n{page_text}")
                                 else:
                                     # Fallback: Use PDF page number
-                                    text.append(f"--- Page {page_num + 1} ---\n{page_text}")
+                                    text.append(f"--- Page {pdf_page} (PDF {pdf_page}) ---\n{page_text}")
                     except Exception as e:
                         print(f"Warning: Could not extract page {page_num + 1}: {e}")
 
@@ -389,38 +393,63 @@ class PDFProcessor:
         Extract page numbers from chunk text containing page markers.
 
         Args:
-            text: Chunk text potentially containing "--- Page X ---" markers
+            text: Chunk text potentially containing page markers like:
+                  "--- Page 5 (PDF 13) ---" or "--- Page 5 ---"
 
         Returns:
-            Dict with page_number (int), page_start (int), page_end (int), page_range (str)
+            Dict with:
+                - page_number: printed page number (primary)
+                - page_start, page_end: printed page range
+                - page_range: human-readable printed page range
+                - pdf_page_number: PDF page number (for linking)
+                - pdf_page_start, pdf_page_end: PDF page range
+                - pdf_page_range: human-readable PDF page range
         """
-        # Find all page markers in the text
-        page_pattern = r'--- Page (\d+) ---'
+        # Pattern to match "--- Page X (PDF Y) ---" or "--- Page X ---"
+        page_pattern = r'--- Page (\d+)(?: \(PDF (\d+)\))? ---'
         matches = re.findall(page_pattern, text)
 
         if not matches:
             return {}
 
-        # Convert to integers
-        page_numbers = [int(p) for p in matches]
-        page_start = min(page_numbers)
-        page_end = max(page_numbers)
+        # Extract printed and PDF page numbers
+        printed_pages = []
+        pdf_pages = []
 
-        # Primary page number (first occurrence)
-        page_number = page_numbers[0]
+        for match in matches:
+            printed_page = int(match[0])
+            printed_pages.append(printed_page)
 
-        # Page range string
-        if page_start == page_end:
-            page_range = str(page_start)
-        else:
-            page_range = f"{page_start}-{page_end}"
+            if match[1]:  # PDF page number present
+                pdf_page = int(match[1])
+                pdf_pages.append(pdf_page)
 
-        return {
-            'page_number': page_number,      # Primary page (first in chunk)
-            'page_start': page_start,         # Start page if spans multiple
-            'page_end': page_end,             # End page if spans multiple
-            'page_range': page_range          # Human-readable range
+        # Printed page metadata
+        printed_start = min(printed_pages)
+        printed_end = max(printed_pages)
+        printed_number = printed_pages[0]
+
+        result = {
+            'page_number': printed_number,      # Primary printed page
+            'page_start': printed_start,         # Printed page range start
+            'page_end': printed_end,             # Printed page range end
+            'page_range': str(printed_start) if printed_start == printed_end else f"{printed_start}-{printed_end}"
         }
+
+        # PDF page metadata (if available)
+        if pdf_pages:
+            pdf_start = min(pdf_pages)
+            pdf_end = max(pdf_pages)
+            pdf_number = pdf_pages[0]
+
+            result.update({
+                'pdf_page_number': pdf_number,      # Primary PDF page
+                'pdf_page_start': pdf_start,         # PDF page range start
+                'pdf_page_end': pdf_end,             # PDF page range end
+                'pdf_page_range': str(pdf_start) if pdf_start == pdf_end else f"{pdf_start}-{pdf_end}"
+            })
+
+        return result
 
     def chunk_text(
         self,
