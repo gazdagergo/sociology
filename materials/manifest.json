@@ -1,14 +1,14 @@
 {
   "version": "1.0",
-  "last_updated": "2025-12-29",
-  "description": "Manifest of learning materials stored in cloud (Google Drive). PDFs are not in git - only their metadata and links are tracked here.",
+  "last_updated": "2025-12-30",
+  "description": "Manifest of learning materials stored in cloud (Firebase Storage). PDFs are not in git - only their metadata and links are tracked here.",
   "materials": [
     {
       "id": "sozialwissenschaftliches-arbeiten",
       "title": "Sozialwissenschaftliches Arbeiten",
       "filename": "Sozialwissenschaftliches_Arbeiten.pdf",
-      "url": "https://drive.google.com/file/d/1L_pzKERP7a1lVr2QQhYidxVSQlRWhwKe/view?usp=sharing",
-      "raw_url": "https://drive.google.com/uc?export=download&id=1L_pzKERP7a1lVr2QQhYidxVSQlRWhwKe",
+      "url": "https://firebasestorage.googleapis.com/v0/b/azaaenfelhom.firebasestorage.app/o/25501-01-S_1-S002722097.pdf?alt=media&token=c892630a-0a55-4589-8fab-cf83c266deff",
+      "raw_url": "https://firebasestorage.googleapis.com/v0/b/azaaenfelhom.firebasestorage.app/o/25501-01-S_1-S002722097.pdf?alt=media&token=c892630a-0a55-4589-8fab-cf83c266deff",
       "type": "textbook",
       "pages": 108,
       "sections": [
@@ -67,6 +67,42 @@
       "course": "Kurs 25501 B1: Einführung in den Studiengang",
       "uploaded": "2025-12-29",
       "notes": "Foundational methods textbook covering social scientific research methods, academic communication, and study skills. Essential guide for learning how to work scientifically in sociology, political science, and administrative science. Covers research process, reading/writing academic texts, literature research, and preparing assignments including the Bachelor thesis."
+    },
+    {
+      "id": "politikfeldanalyse-blum-schubert",
+      "title": "Politikfeldanalyse. Eine Einführung",
+      "filename": "978-3-658-17758-4.pdf",
+      "url": "https://firebasestorage.googleapis.com/v0/b/azaaenfelhom.firebasestorage.app/o/978-3-658-17758-4.pdf?alt=media&token=d57e57f6-fe0e-4c3c-a4f5-5d643cb6f777",
+      "raw_url": "https://firebasestorage.googleapis.com/v0/b/azaaenfelhom.firebasestorage.app/o/978-3-658-17758-4.pdf?alt=media&token=d57e57f6-fe0e-4c3c-a4f5-5d643cb6f777",
+      "type": "textbook",
+      "pages": 316,
+      "authors": "Sonja Blum, Klaus Schubert",
+      "edition": "3., überarbeitete Auflage",
+      "year": 2018,
+      "publisher": "Springer VS",
+      "isbn": "978-3-658-17758-4",
+      "learning_unit": "Übung_A",
+      "course": "Kurs 25501 B1: Einführung in den Studiengang",
+      "uploaded": "2025-12-30",
+      "notes": "Required reading for Übung A (Task 1 & 3). Introductory textbook on policy analysis covering policy, polity, and politics concepts. Pages 9-15 contain definitions of key terms Policy, Polity, and Politics. This is a monograph (single-authored work)."
+    },
+    {
+      "id": "lehrbuch-politikfeldanalyse",
+      "title": "Lehrbuch der Politikfeldanalyse",
+      "filename": "10.1515_9783110408072.pdf",
+      "url": "https://firebasestorage.googleapis.com/v0/b/azaaenfelhom.firebasestorage.app/o/10.1515_9783110408072.pdf?alt=media&token=df0f138e-b3a0-4d25-83c3-b5907f1efe42",
+      "raw_url": "https://firebasestorage.googleapis.com/v0/b/azaaenfelhom.firebasestorage.app/o/10.1515_9783110408072.pdf?alt=media&token=df0f138e-b3a0-4d25-83c3-b5907f1efe42",
+      "type": "textbook",
+      "pages": 544,
+      "editors": "Klaus Schubert, Nils C. Bandelow (Hrsg.)",
+      "edition": "3., aktualisierte und überarbeitete Auflage",
+      "year": 2014,
+      "publisher": "De Gruyter Oldenbourg",
+      "isbn": "978-3-11-040807-2",
+      "learning_unit": "Übung_A",
+      "course": "Kurs 25501 B1: Einführung in den Studiengang",
+      "uploaded": "2025-12-30",
+      "notes": "Required reading for Übung A (Task 1 & 3). Comprehensive handbook on policy analysis edited by leading scholars. Pages 1-24 contain definitions of Policy, Polity, and Politics. This is an edited volume (Sammelband) with multiple contributing authors."
     }
   ]
 }
