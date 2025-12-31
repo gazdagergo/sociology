@@ -265,6 +265,45 @@ Each PDF is split into chunks with this structure:
 }
 ```
 
+### Page Numbering System
+
+PDFs often have **two types of page numbers**:
+- **Printed pages** (for citations): "page 5" as shown in the document
+- **PDF pages** (for links): page 13 in the actual PDF file
+
+Our system extracts and stores both:
+
+```python
+'metadata': {
+  # Printed page numbers (for academic citations)
+  'page_number': 5,           # Primary page
+  'page_start': 5,            # First page in chunk
+  'page_end': 6,              # Last page in chunk
+  'page_range': '5-6',        # Human-readable
+
+  # PDF page numbers (for direct links)
+  'pdf_page_number': 13,      # Primary PDF page
+  'pdf_page_start': 13,       # First PDF page
+  'pdf_page_end': 14,         # Last PDF page
+  'pdf_page_range': '13-14',  # Human-readable
+
+  # Other metadata...
+}
+```
+
+**Use Cases:**
+- 📝 **Citations**: `(Schubert & Bandelow, 2014, S. 5)` - uses printed page
+- 🔗 **Direct Links**: `url#page=13` - uses PDF page number
+- 🔍 **Search Filtering**: Filter by printed page range (1-24)
+
+**Learn More:**
+See the comprehensive [Pagination Extraction Code Tour](code-tours/PAGINATION-EXTRACTION.md) for:
+- How PDF page labels are extracted from metadata
+- The dual page marker system (`--- Page 5 (PDF 13) ---`)
+- Regex parsing and metadata structure
+- Step-by-step extraction walkthrough
+- Common operations and troubleshooting
+
 ## 🔧 Configuration Reference
 
 ### Environment Variables
