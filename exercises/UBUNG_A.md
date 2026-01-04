@@ -78,6 +78,8 @@ Extract and summarize (as excerpts/Exzerpte) the three key terms used throughout
 ### Task 4: Video Analysis - Research Method
 **What to do**: Watch the video about the "Circular Cities" project
 
+**Video Transcript**: [Circular Cities Video Transcript](../materials/sociology/transcripts/circular-cities-video-transcript.md)
+
 Answer these questions:
 1. **Which of the three concepts (Policy, Polity, Politics) does the research project belong to?**
    - Policy (about specific policy sectors)?

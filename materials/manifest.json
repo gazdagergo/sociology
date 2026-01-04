@@ -1,7 +1,7 @@
 {
   "version": "1.0",
-  "last_updated": "2025-12-30",
-  "description": "Manifest of learning materials stored in cloud (Firebase Storage). PDFs are not in git - only their metadata and links are tracked here.",
+  "last_updated": "2026-01-04",
+  "description": "Manifest of learning materials stored in cloud (Firebase Storage) and local transcripts. PDFs are not in git - only their metadata and links are tracked here. Video transcripts are stored in the repository.",
   "materials": [
     {
       "id": "sozialwissenschaftliches-arbeiten",
@@ -103,6 +103,18 @@
       "course": "Kurs 25501 B1: Einführung in den Studiengang",
       "uploaded": "2025-12-30",
       "notes": "Required reading for Übung A (Task 1 & 3). Comprehensive handbook on policy analysis edited by leading scholars. Pages 1-24 contain definitions of Policy, Polity, and Politics. This is an edited volume (Sammelband) with multiple contributing authors."
+    },
+    {
+      "id": "circular-cities-video",
+      "title": "Circular Cities NRW - Video Transcript",
+      "filename": "circular-cities-video-transcript.md",
+      "source_file": "materials/sociology/transcripts/circular-cities-video-transcript.md",
+      "type": "video_transcript",
+      "researchers": "Elisabeth Töller, Alix Weigel",
+      "learning_unit": "Übung_A",
+      "course": "Kurs 25501 B1: Einführung in den Studiengang",
+      "uploaded": "2026-01-04",
+      "notes": "Video transcript for Übung A Task 4. Discusses the Circular Cities research project examining waste prevention policies in 22 municipalities in North Rhine-Westphalia. Covers policy analysis methodology, circular economy, and municipal environmental policy implementation. Required for analyzing research methods and understanding policy/polity/politics concepts."
     }
   ]
 }
